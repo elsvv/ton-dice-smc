@@ -1,0 +1,9 @@
+const op::invite::send = 10;
+const op::invite::accept = 11;
+const op::invite::cancel = 12;
+
+const op::global::create = 20;
+const op::global::accept = 21;
+const op::global::cancel = 22;
+
+const op::withdraw = 666;

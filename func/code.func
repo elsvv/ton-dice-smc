@@ -1,0 +1,48 @@
+#pragma version >=0.2.0;
+
+#include "src/op-codes.fc";
+#include "src/exit-codes.fc";
+#include "src/constants.fc";
+#include "src/storage.fc";
+#include "src/utils.fc";
+#include "src/handles.fc";
+#include "src/get-methods.fc";
+
+() recv_internal(int my_balance, int msg_value, cell in_msg_cell, slice in_msg) impure {
+  var cs = in_msg_cell.begin_parse();
+  var (flags, sender_addr) = (cs~load_uint(4), cs~load_msg_addr());
+
+  if (flags & 1) { return ();} ;; ignore all other bounced message
+
+  int op = in_msg~load_uint(32);
+
+  if (op == op::withdraw) {
+    handle_withdraw(sender_addr, my_balance, msg_value);
+    return ();
+  }
+
+  if (op == op::invite::send) {
+    handle_create_invite(sender_addr, my_balance, msg_value, in_msg);
+    return ();
+  }
+
+  if (op == op::invite::accept) {
+    handle_accept_invite(sender_addr, my_balance, msg_value, in_msg);
+    return ();
+  }
+
+  if (op == op::global::create) {
+    handle_create_global(sender_addr, my_balance, msg_value, in_msg);
+    return ();
+  }
+
+  if (op == op::global::accept) {
+    handle_accept_global(sender_addr, my_balance, msg_value, in_msg);
+    return ();
+  }
+
+  throw(0xffffff);
+}
+
+() recv_external(slice in_msg) {
+}

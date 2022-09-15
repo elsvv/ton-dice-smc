@@ -1,0 +1,24 @@
+;; #include "./utils.fc";
+
+;; TODO: refactore to function
+(cell, int, cell, int) get_game_invites(slice addr) method_id {
+  (_, cell invites_dict, cell global_dict) = load_data();
+
+  cell invites_res = new_dict();
+  int key = -1;
+
+  do {
+    (key, slice game, int f) = invites_dict.udict_get_next?(64, key);
+    if (f) {
+      (slice creator_addr, slice opp_addr) = (game~load_msg_addr(), game~load_msg_addr());
+
+      if (sdeq(opp_addr, addr)) {
+        (slice value, _) = invites_dict.udict_get?(64, key);
+
+        invites_res~udict_set(64, key, value);
+      }
+    }
+  } until (~ f);
+
+  return (invites_res, ~ dict_empty?(invites_res), global_dict, ~ dict_empty?(global_dict));
+}

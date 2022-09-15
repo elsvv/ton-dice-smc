@@ -1,0 +1,81 @@
+int sdeq(slice s1, slice s2) asm "SDEQ";
+
+(int, int) encode_number_to_text(int number) {
+  int len = 0;
+  int value = 0;
+  int mult = 1;
+  do {
+    (number, int res) = number.divmod(10);
+    value = value + (res + 48) * mult;
+    mult = mult * 256;
+    len = len + 1;
+  } until (number == 0);
+  return (len, value);
+}
+
+builder store_number(builder msg, int number, int divisor) { ;; divisor is 0 (for int) or N for 10**N for print float numbers
+  if (divisor) {
+    (int ceil, int res) = divmod(number, divisor);
+    (int cl, int cv) = encode_number_to_text(ceil);
+    msg = msg.store_uint(cv, cl * 8);
+    msg = msg.store_uint(46, 8); ;; "."
+    (int rl, int rv) = encode_number_to_text(res);
+    repeat(9 - rl) {
+      msg = msg.store_uint(48, 8); ;; "0"
+    }
+    return msg.store_uint(rv, rl * 8);
+  } else {
+    (int cl, int cv) = encode_number_to_text(number);
+    return msg.store_uint(cv, cl * 8);
+  }
+}
+
+(slice, int, int) find_game(cell games, slice creator_target, slice opp_target) inline_ref {
+  int key = -1;
+  int res_found = 0;
+  do {
+    (key, slice game, int f) = games.udict_get_next?(64, key);
+    if (f) {
+      (slice creator_addr, slice opp_addr) = (game~load_msg_addr(), game~load_msg_addr());
+      int creator_flag = sdeq(creator_addr, creator_target);
+      int opp_flag = sdeq(opp_addr, opp_target);
+
+      if (creator_flag & opp_flag) {
+        f = 0;
+        res_found = -1;
+      }
+    }
+  } until (~ f);
+
+  if (res_found) {
+    (slice value, int f) = games.udict_get?(64, key);
+    return (value, key, f);
+  } else {
+    return (null(), 0, 0);
+  }
+}
+
+int roll_dice() impure inline_ref {
+  return rand(6) + 1;
+}
+
+(int, int) play_dice() impure inline_ref {
+  randomize_lt();
+  int sender_roll = roll_dice();
+  int opp_roll = roll_dice();
+
+  return (sender_roll, opp_roll);
+}
+
+
+() send_text(int coins, slice target_addr, cell body, int mode) impure inline_ref {
+  var msg = begin_cell()
+          .store_uint(0x10, 6)
+          .store_slice(target_addr)
+          .store_grams(coins)
+          .store_uint(1, 1 + 4 + 4 + 64 + 32 + 1 + 1)
+          .store_ref(body)
+          .end_cell();
+
+  send_raw_message(msg, mode);
+}

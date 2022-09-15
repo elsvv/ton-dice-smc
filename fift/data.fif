@@ -1,0 +1,16 @@
+"TonUtil.fif" include
+"Asm.fif" include
+
+"kQD_3QV9nlkEsLIpUieLN7gY871TPkPOHkJ1qYPDsu_vhdmN" // owner address
+
+parse-smc-addr drop 2constant owner_addr
+
+// "build/contract.pk" load-generate-keypair // generate key pair
+// constant private_key  // save private to constant
+// constant public_key // save public to constant
+
+<b
+  owner_addr Addr,
+  null dict, // invites games dict
+  null dict, // global games dict
+b>

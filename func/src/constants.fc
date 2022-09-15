@@ -1,0 +1,16 @@
+const smc::reserved = 50000000;
+const smc::share = 5;
+
+const slice text::new = "You have been invited to play ";
+const slice text::accepted = "Game has been created";
+const slice text::own = "You dice: ";
+const slice text::opp = "You opponent: ";
+const slice text::take_owner = "You are a onwer, take profit ";
+const slice text::take_unkwonw = "You are not a onwer! ";
+
+const int send_mode::default = 0;
+const int send_mode::separate_gas = 1;
+const int send_mode::ignore_errors = 2;
+const int send_mode::carry_remaining_balance = 128;
+const int send_mode::carry_remaining_value = 64;
+const int send_mode::destroy_if_zero = 64;

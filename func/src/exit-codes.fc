@@ -1,0 +1,5 @@
+const int error::small_bet = 50;
+const int error::less_reserved = 60;
+const int error::wrong_bet = 70;
+const int error::game_exists = 80;
+const int error::game_not_exists = 85;
