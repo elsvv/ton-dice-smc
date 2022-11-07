@@ -1,6 +1,8 @@
 # TON Dice smc code
 
-Deployed by [toncli](https://github.com/disintar/toncli)
+(WIP)
+
+Simple non-sharded smartcontract. Here one can create and send invite to an exact wallet, create global game, cancel both games and accept them.
 
 ### Usage
 
