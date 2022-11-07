@@ -41,6 +41,16 @@
     return ();
   }
 
+  if (op == op::global::cancel) {
+    handle_cancel_global(sender_addr, my_balance, msg_value, in_msg);
+    return ();
+  }
+
+  if (op == op::invite::cancel) {
+    handle_cancel_invite(sender_addr, my_balance, msg_value, in_msg);
+    return ();
+  }
+
   throw(0xffffff);
 }
 

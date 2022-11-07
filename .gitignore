@@ -1,3 +1,4 @@
 *.pk
 .idea
 build
+.DS_store

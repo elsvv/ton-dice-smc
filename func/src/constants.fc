@@ -5,8 +5,9 @@ const slice text::new = "You have been invited to play ";
 const slice text::accepted = "Game has been created";
 const slice text::own = "You dice: ";
 const slice text::opp = "You opponent: ";
-const slice text::take_owner = "You are a onwer, take profit ";
-const slice text::take_unkwonw = "You are not a onwer! ";
+const slice text::take_owner = "It's yours";
+const slice text::take_unkwonw = "You are not an onwer!";
+const slice text::game_canceled = "Your game has been canceled";
 
 const int send_mode::default = 0;
 const int send_mode::separate_gas = 1;
